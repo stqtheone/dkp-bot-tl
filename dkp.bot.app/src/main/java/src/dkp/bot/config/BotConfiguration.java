@@ -47,6 +47,8 @@ public class BotConfiguration {
 				.description("Меню")
 				.build();
 
+
+
 		client.getRestClient().getApplicationService()
 				.createGuildApplicationCommand(applicationId,1207997792761675796L, menu)
 				.doOnError(e -> System.out.println("Failed to create command: " + e.getMessage()))

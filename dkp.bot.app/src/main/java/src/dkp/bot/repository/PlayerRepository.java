@@ -12,4 +12,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 	Optional<Player> findByGameName(String gameName);
 
 	List<Player> findAllByActiveFalseAndConfirmedFalse();
+
+	List<Player> findAllByActiveTrueAndConfirmedTrue();
+
+	Optional<Player> findByActiveTrueAndConfirmedTrueAndDiscordId(String discordId);
 }

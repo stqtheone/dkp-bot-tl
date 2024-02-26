@@ -1,9 +1,7 @@
 package src.dkp.bot.service.player;
 
-import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import src.dkp.bot.entity.Player;
@@ -19,30 +17,41 @@ public class PlayerService {
 	private final PlayerRepository playerRepository;
 
 
-	public void createPlayer(Message message) {
-		Optional<User> userOptional = message.getAuthor();
-		if (userOptional.isPresent()) {
-			User user = userOptional.get();
-			Player player = new Player();
+	public void createPlayer(String nickname, String discordId, String username) {
 
-			player.setDiscordName(user.getUsername());
-			player.setDiscordId(user.getId().asString());
-			player.setDkpCount(0L);
-			player.setGameName(message.getContent());
-			player.setActive(false);
-			player.setConfirmed(false);
+		Player player = new Player();
 
-			playerRepository.save(player);
+		player.setDiscordName(username);
+		player.setDiscordId(discordId);
+		player.setDkpCount(0L);
+		player.setGameName(nickname);
+		player.setActive(false);
+		player.setConfirmed(false);
 
-		}
+		playerRepository.save(player);
+
+	}
+
+	@Transactional
+	public Player getPlayerByDiscordId(String discordId) {
+		return playerRepository.findByActiveTrueAndConfirmedTrueAndDiscordId(discordId).orElse(null);
+	}
+
+
+	public void updatePlayer(Player player) {
+		playerRepository.save(player);
 	}
 
 	public List<Player> getUnactivatedUsers() {
 		return playerRepository.findAllByActiveFalseAndConfirmedFalse();
 	}
 
+	public List<Player> getAllActiveAndConfirmedPlayers() {
+		return playerRepository.findAllByActiveTrueAndConfirmedTrue();
+	}
+
 	@Transactional
-	public void addDkpCount(String nickname, Long count) {
+	public Optional<Player> addDkpCount(String nickname, Long count) {
 		Optional<Player> player = playerRepository.findByGameName(nickname);
 
 		if (player.isPresent()) {
@@ -50,13 +59,15 @@ public class PlayerService {
 			playerRepository.save(player.get());
 		}
 
+		return player;
+
 	}
 
 	@Transactional
 	public void activateAllUnactiveUsers() {
 		List<Player> players = getUnactivatedUsers();
 
-		for (Player player: players) {
+		for (Player player : players) {
 			player.setActive(true);
 			player.setConfirmed(true);
 			playerRepository.save(player);

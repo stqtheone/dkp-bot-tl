@@ -30,7 +30,7 @@ public class Player {
 
 	private Boolean confirmed;
 
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "user_event",
 			joinColumns = { @JoinColumn(name = "user_id") },

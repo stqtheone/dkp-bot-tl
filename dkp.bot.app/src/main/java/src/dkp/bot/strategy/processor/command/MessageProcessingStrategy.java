@@ -1,12 +1,10 @@
-package src.dkp.bot.strategy.processor.message;
+package src.dkp.bot.strategy.processor.command;
 
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Message;
-import jdk.jfr.Event;
 import reactor.core.publisher.Mono;
 
 public interface MessageProcessingStrategy {
 	boolean appliesTo(MessageCreateEvent event);
 
-	Mono<Void> process(Message message);
+	Mono<Void> process(MessageCreateEvent event);
 }

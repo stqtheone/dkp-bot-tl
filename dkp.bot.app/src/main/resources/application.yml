@@ -1,4 +1,4 @@
-token: "MTIwODM1MDk5NTU1NDM2OTU0Ng.GViUrB.rFjuT_rnPgCZnKgS5sr5kLxgQHIzqkE_0MoYJ0"
+token: "MTIwODM1MDk5NTU1NDM2OTU0Ng.G2LeWJ.yA2U_MOSBAaBFV4Iq2NsiHp0-T-_SNp_F9E4qE"
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5440/dkp

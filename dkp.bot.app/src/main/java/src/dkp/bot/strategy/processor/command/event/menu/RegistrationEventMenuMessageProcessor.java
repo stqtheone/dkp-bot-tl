@@ -1,20 +1,19 @@
-package src.dkp.bot.strategy.processor.command;
+package src.dkp.bot.strategy.processor.command.event.menu;
 
 import discord4j.core.event.domain.Event;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import src.dkp.bot.handler.RegistrationEventStateHandler;
-import src.dkp.bot.handler.UserInputStateHandler;
+import src.dkp.bot.strategy.processor.command.MenuProcessingStrategy;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class RegistrationEventMenuMessageProcessor implements MenuProcessingStrategy {
 	private final RegistrationEventStateHandler registrationEventStateHandler;
 
-	private final String EVENT_REGISTRATION = "event_registration";
+	private final String EVENT_REGISTRATION = "create_event";
 
 	@Override
 	public boolean appliesTo(Event event) {
@@ -36,7 +35,7 @@ public class RegistrationEventMenuMessageProcessor implements MenuProcessingStra
 
 		registrationEventStateHandler.setAwaitingInput(userId, true);
 
-		return buttonInteractionEvent.reply("Пожалуйста, введите в чат код события")
+		return buttonInteractionEvent.reply("Пожалуйста, введите в чат код события и количество дкп очков получаемых за участие в формате 'Код события:количество очков:название события'")
 				.withEphemeral(true);
 
 	}

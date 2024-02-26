@@ -20,22 +20,33 @@ public class EventService {
 	private final DkpEventRepository dkpEventRepository;
 
 
-	public void createDkpEvent(Message message) {
+	public DkpEvent createDkpEvent(Message message) {
 		Optional<User> userOptional = message.getAuthor();
-		String[] content = message.getContent().trim().split(" ");
-		if (content.length > 1) {
+		String[] content = message.getContent().trim().split(":");
+		if (content.length > 2) {
 			if (userOptional.isPresent()) {
 				DkpEvent dkpEvent = new DkpEvent();
 
 				dkpEvent.setEventCode(content[0]);
 				dkpEvent.setCreatedUser(userOptional.get().getUsername());
 				dkpEvent.setDkpCount(Long.parseLong(content[1]));
+				dkpEvent.setDescription(content[2]);
 				dkpEvent.setActive(true);
 
 				dkpEventRepository.save(dkpEvent);
+				return dkpEvent;
 
 			}
 		}
+		return null;
 
+	}
+
+	public void updateDkpEvent(DkpEvent dkpEvent) {
+		dkpEventRepository.save(dkpEvent);
+	}
+
+	public DkpEvent findDkpEventByThreadId(String threadId) {
+		return dkpEventRepository.findByThreadId(threadId).orElse(null);
 	}
 }

@@ -1,18 +1,24 @@
-package src.dkp.bot.strategy.processor.command;
+package src.dkp.bot.strategy.processor.command.registration.menu;
 
 import discord4j.core.event.domain.Event;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.component.TextInput;
+import discord4j.core.spec.InteractionPresentModalSpec;
+import feign.Headers;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import src.dkp.bot.handler.UserInputStateHandler;
+import src.dkp.bot.strategy.processor.command.MenuProcessingStrategy;
 
 @Service
+@RequiredArgsConstructor
 public class RegistrationMessageProcessor implements MenuProcessingStrategy {
-	@Autowired
-	private UserInputStateHandler userInputStateHandler;
+
+	private final UserInputStateHandler userInputStateHandler;
 
 	private final String DKP_REGISTRATION = "dkp_registration";
 
@@ -32,12 +38,16 @@ public class RegistrationMessageProcessor implements MenuProcessingStrategy {
 
 		ButtonInteractionEvent buttonInteractionEvent = (ButtonInteractionEvent) event;
 
-		String userId = buttonInteractionEvent.getInteraction().getUser().getId().asString();
+		TextInput nickname = TextInput.paragraph("nickname", "Игровой ник", 3, 20);
 
-		userInputStateHandler.setAwaitingInput(userId, true);
+		// Создаем спецификацию модального окна с текстовым полем
+		InteractionPresentModalSpec modalSpec = InteractionPresentModalSpec.builder()
+				.customId("registration")
+				.title("Введите ваш ник")
+				.components(ActionRow.of(nickname)) // Добавляем текстовое поле в модальное окно
+				.build();
 
-		return buttonInteractionEvent.reply("Пожалуйста, введите в чат ваш игровой ник")
-				.withEphemeral(true);
+		return buttonInteractionEvent.presentModal(modalSpec);
 
 	}
 

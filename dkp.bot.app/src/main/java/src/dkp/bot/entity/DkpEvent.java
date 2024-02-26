@@ -26,9 +26,13 @@ public class DkpEvent {
 
 	private String createdUser;
 
+	private String description;
+
 	@ManyToMany(mappedBy = "events")
 	private List<Player> activeUsers;
 
 	private Boolean active;
+
+	private String threadId;
 
 }
